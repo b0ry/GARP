@@ -31,6 +31,6 @@ public class TreeChromosones : MonoBehaviour {
 	IEnumerator countdownTree() {
 		yield return new WaitForSeconds(10.0f);
 		Debug.Log ( this.gameObject.transform.root.name );
-		gameObject.GetComponentInParent<TreeGetGA>().MidTree(triangles,squares,circles,nice,nasty,size,shade,types);
+		//gameObject.GetComponentInParent<TreeGetGA>().MidTree(triangles,squares,circles,nice,nasty,size,shade,types);
 	}
 }

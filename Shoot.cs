@@ -19,10 +19,12 @@ public class Shoot : MonoBehaviour {
 		bool flag = gameObject.GetComponentInChildren<NewWalk>().flag;
 		if (!flag){
 		GameObject h = (GameObject)Instantiate(holder,new Vector3(transform.localPosition.x, transform.localPosition.y+0.5f, transform.localPosition.z+1f),transform.localRotation);
-		GameObject g = (GameObject)Instantiate(projectile,h.transform.localPosition,h.transform.localRotation);
+		GameObject g = (GameObject)Instantiate(projectile,h.transform.position,h.transform.rotation);
 		//gameObject.AddComponent<Rigidbody>();
 		//GameObject player =  GameObject.Find("MyPlayer");
-		g.transform.SetParent(h.transform);
+			g.transform.SetParent (h.transform);
+			Destroy (g,3f);
+			Destroy (h,3f);
 		}
 	}
 	void PlayerMelee(){

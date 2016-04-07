@@ -18,7 +18,7 @@ public class TreeSpawn : MonoBehaviour {
 	public int items;
 	public List<string> types;
 	public int idx = 0;
-	private bool flag = false;
+	public bool flag = false;
 	public int level;
 	public Color dudColour;
 	public AudioClip sampleBlock;
@@ -26,10 +26,28 @@ public class TreeSpawn : MonoBehaviour {
 	void Start () {
 		audio = GetComponent<AudioSource>();
 
-		float xz = Random.Range (1.5f,2.2f);
-		float y = Random.Range (2.0f,5.0f);
+		float xz = Random.Range (1f,1.5f);
+		float y = Random.Range (1.4f,2.0f);
 		size = new Vector3(xz,y,xz);
 		transform.localScale = size;
+
+		float r = Random.Range (0.0f,0.5f);
+		float g = Random.Range (0.5f,1.0f);
+		float b = Random.Range (0.0f,0.25f);
+		Renderer treeSkin = this.gameObject.GetComponent<Renderer>();
+		shade = new Color(r,g,b);
+		Color newShade = treeParent.transform.GetComponent<TreeGA>().shades[idx];
+		if (newShade != new Color (0f,0f,0f,0f)){
+			shade = newShade;
+			size = treeParent.transform.GetComponent<TreeGA>().sizes[idx];
+			size += new Vector3 (0.2f,0.5f,0.2f);
+			transform.localScale = size;
+			List<string> newTypes = treeParent.transform.GetComponent<TreeGA>().typess[idx];
+			types.InsertRange(0,newTypes);
+			// level++;
+		}
+		treeSkin.material.color = shade;
+		dudColour = new Color(1f,1f,1f,1f);
 
 		items = Random.Range (1,(int)Mathf.Ceil (xz*y/3));
 		string tag = gameObject.transform.parent.tag;
@@ -42,24 +60,6 @@ public class TreeSpawn : MonoBehaviour {
 			if (type == 4) {types.Add ("nice");}
 			if (type == 5) {types.Add ("nasty");}
 		}
-		float r = Random.Range (0.0f,0.5f);
-		float g = Random.Range (0.5f,1.0f);
-		float b = Random.Range (0.0f,0.25f);
-		Renderer treeSkin = this.gameObject.GetComponent<Renderer>();
-		shade = new Color(r,g,b);
-
-		Color newShade = treeParent.transform.GetComponent<TreeGA>().shades[idx-1];
-		if (newShade != new Color (0f,0f,0f,0f)){
-			shade = newShade;
-			size = treeParent.transform.GetComponent<TreeGA>().sizes[idx-1];
-			size += new Vector3 (0.2f,0.5f,0.2f);
-			transform.localScale = size;
-			List<string> newTypes = treeParent.transform.GetComponent<TreeGA>().typess[idx-1];
-			types.InsertRange(0,newTypes);
-			// level++;
-		}
-		treeSkin.material.color = shade;
-		dudColour = new Color(1f,1f,1f,1f);
 	}
 	
 	// Update is called once per frame
