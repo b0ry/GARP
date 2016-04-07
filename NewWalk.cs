@@ -11,7 +11,7 @@ public class NewWalk : MonoBehaviour {
 	public int damage;
 	
 	void Start () {
-		startpos = transform.localPosition.y;
+		//startpos = transform.position.y;
 		normal = gameObject.GetComponent<Renderer>().material.color;
 	}
 	
@@ -25,14 +25,15 @@ public class NewWalk : MonoBehaviour {
 		 Input.GetKey(KeyCode.LeftArrow) || 
 		 Input.GetKey(KeyCode.RightArrow)) && !flag)
 		{
-			scale = Mathf.Abs(Mathf.Sin(initial));
+			scale = Mathf.Sin(initial)/2f;
 			initial = initial + 0.05f;
-			transform.localPosition = new Vector3(transform.localPosition.x,startpos+scale,transform.localPosition.z);
+			transform.position = new Vector3(transform.position.x,transform.position.y*scale+2f,transform.position.z);
 			
 			if (initial >= 3.2f) {
 				initial = 0f;
 				if(Input.GetKey(KeyCode.RightShift) || Input.GetKey(KeyCode.LeftShift)){
 					GameObject run = (GameObject)Instantiate(smoke, transform.parent.position, transform.parent.rotation);
+					Destroy (run,0.8f);
 				}
 			}
 			// Block
