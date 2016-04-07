@@ -2,6 +2,7 @@
 using System.Collections;
 
 public class PlayerBlock : MonoBehaviour {
+	public Camera myCamera;
 	public int hits;
 	public GameObject hit;
 	public GameObject hit2;
@@ -13,21 +14,21 @@ public class PlayerBlock : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	/*void Update () {
 		TextMesh damCount = GetComponentInChildren<TextMesh>();
-		damCount.transform.rotation = Quaternion.LookRotation(damCount.transform.position - Camera.main.transform.position);
+		//damCount.transform.rotation = Quaternion.LookRotation(damCount.transform.position - myCamera.transform.position);
 		if (counter > 0) {
 			counter--;
 		}
 		if (counter == 0) {
 			damCount.text = "";
 		}
-	}
+	}*/
 
 	void OnCollisionEnter(Collision slash){
 		if (slash.gameObject.tag == "slash"){
-			int damage = GetComponentInChildren<Walk>().damage;
-			bool isBlock = GetComponentInChildren<Walk>().flag;
+			int damage = GetComponentInChildren<NewWalk>().damage;
+			bool isBlock = GetComponentInChildren<NewWalk>().flag;
 			GameObject healthBar = GameObject.Find("Health Bar");
 			int level = transform.GetComponent<PlayerBlockGA>().level;
 			if (!isBlock){

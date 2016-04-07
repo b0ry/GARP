@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ThirdPersonController : MonoBehaviour {
+	public Camera myCamera;
 	private enum CharacterState {
 		Idle = 0,
 		Walking = 1,
@@ -69,11 +70,10 @@ void Awake ()
 
 void UpdateSmoothedMovementDirection ()
 {
-	Transform cameraTransform = Camera.main.transform;
 	bool grounded = IsGrounded();
 	
 	// Forward vector relative to the camera along the x-z plane	
-	Vector3 forward = cameraTransform.TransformDirection(Vector3.forward);
+	Vector3 forward = myCamera.transform.TransformDirection(Vector3.forward);
 	forward.y = 0f;
 	forward = forward.normalized;
 
@@ -99,12 +99,12 @@ void UpdateSmoothedMovementDirection ()
 	isMoving = Mathf.Abs (h) > 0.1f || Mathf.Abs (v) > 0.1f;
 		
 	// Target direction relative to the camera
-	Vector3 targetDirection;
+	Vector3 targetDirection = Vector3.zero;
 	bool isBlocking = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
-		if (!isBlocking) 
+	if (!isBlocking) 
 			targetDirection = h * right + v * forward;
-	else
-	targetDirection = Vector3.zero;
+	//else
+	//targetDirection = Vector3.zero;
 	// Grounded controls
 	if (grounded)
 	{

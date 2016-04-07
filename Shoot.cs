@@ -16,7 +16,7 @@ public class Shoot : MonoBehaviour {
 		if( Input.GetMouseButtonUp(1)) {CancelInvoke("PlayerMelee");}
 	}
 	void PlayerFire(){
-		bool flag = gameObject.GetComponentInChildren<Walk>().flag;
+		bool flag = gameObject.GetComponentInChildren<NewWalk>().flag;
 		if (!flag){
 		GameObject h = (GameObject)Instantiate(holder,new Vector3(transform.localPosition.x, transform.localPosition.y+0.5f, transform.localPosition.z+1f),transform.localRotation);
 		GameObject g = (GameObject)Instantiate(projectile,h.transform.localPosition,h.transform.localRotation);
@@ -26,7 +26,7 @@ public class Shoot : MonoBehaviour {
 		}
 	}
 	void PlayerMelee(){
-		bool flag = gameObject.GetComponentInChildren<Walk> ().flag;
+		bool flag = gameObject.GetComponentInChildren<NewWalk> ().flag;
 		if (!flag) {
 			GameObject f = (GameObject)Instantiate (slash, new Vector3(transform.localPosition.x,transform.localPosition.y+1f,transform.localPosition.z+1f), transform.localRotation);
 			//f.AddComponent<Rigidbody> ();
