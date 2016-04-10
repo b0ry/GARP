@@ -6,8 +6,6 @@ public class TreeChromosones : MonoBehaviour {
 	public int triangles;
 	public int squares;
 	public int circles;
-	public int food;
-	public int money;
 	public int nice;
 	public int nasty;
 	public Vector3 size;
@@ -32,5 +30,6 @@ public class TreeChromosones : MonoBehaviour {
 		yield return new WaitForSeconds(10.0f);
 		Debug.Log ( this.gameObject.transform.root.name );
 		//gameObject.GetComponentInParent<TreeGetGA>().MidTree(triangles,squares,circles,nice,nasty,size,shade,types);
+		gameObject.GetComponentInParent<TreeGA>().RankTree(triangles,squares,circles,nice,nasty,size,shade,types);
 	}
 }

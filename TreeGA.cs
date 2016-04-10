@@ -4,20 +4,21 @@ using System.Collections.Generic;
 
 public class TreeGA : MonoBehaviour {
 	public int treeCounter;
-	public int[] fitness = new int[49];
 	public int[] indices = new int[10];
-	public int[] trnglVals = new int[49] ;
-	public int[] sqrVals = new int[49] ;
-	public int[] crclVals = new int[49] ;
-	public int[] nastyVals = new int[49] ;
-	public int[] niceVals = new int[49] ;
-	public Vector3[] sizes = new Vector3[49];
-	public Color[] shades = new Color[49];
-	public List<string>[] typess = new List<string>[49];
+	public int[] fitness = new int[7];
+	public int[] trnglVals = new int[7] ;
+	public int[] sqrVals = new int[7] ;
+	public int[] crclVals = new int[7] ;
+	public int[] nastyVals = new int[7] ;
+	public int[] niceVals = new int[7] ;
+	public Vector3[] sizes = new Vector3[7];
+	public Color[] shades = new Color[7];
+	public List<string>[] typess = new List<string>[7];
 	private int i=0;
 	private GameObject treeCone;
 	private int children;
 	public int level;
+	public GameObject tree;
 
 	// Use this for initialization
 	void Start () {
@@ -39,7 +40,7 @@ public class TreeGA : MonoBehaviour {
 
 		i++;
 
-		if (i == children*7) {
+		if (i == children) {
 			Debug.Log ("Ranking  " + transform.name);
 			i = 0;
 			level++;
@@ -54,20 +55,23 @@ public class TreeGA : MonoBehaviour {
 			if (nstySum > cirSum) {addHue = new Color(0.08f,0.085f,0.075f,0f);}
 			if (niceSum > nstySum) {addHue = new Color(-0.085f,-0.075f,-0.8f,0f);}
 			Debug.Log(addHue);
-			for (int j=0; j < children*7; j++){
+			for (int j=0; j < children; j++){
 				fitness[j] = trnglVals[j] + sqrVals[j] + crclVals[j];
-				shades[j] += addHue;
+				float rndR = Random.Range (0.01f,0.05f);
+				float rndG = Random.Range (0.01f,0.05f);
+				float rndB = Random.Range (0.01f,0.05f);
+				shades[j] += addHue + new Color(rndR,rndG,rndB,0f);
 			}
 
 			int[] maxima = new int[10];
-			int[] sorted = new int[49];
-			System.Array.Copy (fitness,sorted,49);
+			int[] sorted = new int[7];
+			System.Array.Copy (fitness,sorted,7);
 			System.Array.Sort(sorted);
 			System.Array.Reverse(sorted);
-			System.Array.Copy (sorted,maxima,10);
+			System.Array.Copy (sorted,maxima,7);
 
 			int kMax = 0;
-			for (int j = 0; j < children*7; j++){
+			for (int j = 0; j < children; j++){
 				if (fitness[j] == maxima[kMax]){
 					indices[kMax] = j;
 					kMax++;
@@ -77,7 +81,7 @@ public class TreeGA : MonoBehaviour {
 			}
 
 			int kInd = 0;
-				for (int j = 0; j < children*7; j++){
+				for (int j = 0; j < children; j++){
 					if (fitness[j] == 0){
 						trnglVals[j] = trnglVals[indices[kInd]];
 						sqrVals[j] = sqrVals[indices[kInd]];
@@ -91,7 +95,7 @@ public class TreeGA : MonoBehaviour {
 				}
 				if (kInd == 9){ break;}
 			}
-			for (int j = 0; j < children*7; j++){
+			for (int j = 0; j < children; j++){
 				int number = j+1;
 				GameObject[] treeCones = new GameObject[10];
 				treeCones = GameObject.FindGameObjectsWithTag(number.ToString());
@@ -104,10 +108,10 @@ public class TreeGA : MonoBehaviour {
 					}
 				} 
 			
-				GameObject tree = Instantiate(GameObject.Find ("default"), treeCone.transform.position, treeCone.transform.rotation) as GameObject;
-				tree.transform.parent = treeCone.transform;
-				tree.GetComponent<TreeSpawn>().treeParent = gameObject;
-				tree.GetComponent<TreeSpawn>().level = level;
+				GameObject newTree = Instantiate(tree, treeCone.transform.position, treeCone.transform.rotation) as GameObject;
+				newTree.transform.parent = treeCone.transform;
+				newTree.GetComponent<TreeSpawn>().treeParent = gameObject;
+				newTree.GetComponent<TreeSpawn>().level = level;
 
 				trnglVals[j] = 0;
 				sqrVals[j] = 0;
