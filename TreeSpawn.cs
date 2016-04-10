@@ -19,7 +19,7 @@ public class TreeSpawn : MonoBehaviour {
 	public List<string> types;
 	public int idx = 0;
 	public bool flag = false;
-	public int level;
+	public int level = 1;
 	public Color dudColour;
 	public AudioClip sampleBlock;
 	
@@ -30,24 +30,6 @@ public class TreeSpawn : MonoBehaviour {
 		float y = Random.Range (1.4f,2.0f);
 		size = new Vector3(xz,y,xz);
 		transform.localScale = size;
-
-		float r = Random.Range (0.0f,0.5f);
-		float g = Random.Range (0.5f,1.0f);
-		float b = Random.Range (0.0f,0.25f);
-		Renderer treeSkin = this.gameObject.GetComponent<Renderer>();
-		shade = new Color(r,g,b);
-		Color newShade = treeParent.transform.GetComponent<TreeGA>().shades[idx];
-		if (newShade != new Color (0f,0f,0f,0f)){
-			shade = newShade;
-			size = treeParent.transform.GetComponent<TreeGA>().sizes[idx];
-			size += new Vector3 (0.2f,0.5f,0.2f);
-			transform.localScale = size;
-			List<string> newTypes = treeParent.transform.GetComponent<TreeGA>().typess[idx];
-			types.InsertRange(0,newTypes);
-			// level++;
-		}
-		treeSkin.material.color = shade;
-		dudColour = new Color(1f,1f,1f,1f);
 
 		items = Random.Range (1,(int)Mathf.Ceil (xz*y/3));
 		string tag = gameObject.transform.parent.tag;
@@ -60,34 +42,50 @@ public class TreeSpawn : MonoBehaviour {
 			if (type == 4) {types.Add ("nice");}
 			if (type == 5) {types.Add ("nasty");}
 		}
+
+		float r = Random.Range (0.0f,0.5f);
+		float g = Random.Range (0.5f,1.0f);
+		float b = Random.Range (0.0f,0.25f);
+		Renderer treeSkin = this.gameObject.GetComponent<Renderer>();
+		shade = new Color(r,g,b);
+		Color newShade = treeParent.transform.GetComponent<TreeGA>().shades[idx-1];
+		if (newShade != new Color (0f,0f,0f,0f)){
+			shade = newShade;
+			size = treeParent.transform.GetComponent<TreeGA>().sizes[idx-1];
+			size += new Vector3 (0.2f,0.5f,0.2f);
+			transform.localScale = size;
+			List<string> newTypes = treeParent.transform.GetComponent<TreeGA>().typess[idx-1];
+			types.InsertRange(0,newTypes);
+			// level++;
+		}
+		treeSkin.material.color = shade;
+		dudColour = new Color(1f,1f,1f,1f);
+
+
 	}
 	
 	// Update is called once per frame
 	void OnCollisionEnter (Collision lngRange) {
 		if(lngRange.gameObject.tag=="bullet" && flag == false){
 			int playerLevel = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().level;
+			Vector3 yAdd = new Vector3(0f,2f,0f);
 			if (level <= playerLevel) {
 				audio.PlayOneShot(sampleHit, volume);
 				for (int i = 0; i <= items; i++){
 					if (types[i] == "triangle") { 
-						Transform trngl = Instantiate(triangle, transform.position, transform.rotation) as Transform;
-						trngl.parent = this.transform.parent;
+						CreateItem (triangle, yAdd);
 					}
 					if (types[i] == "square") { 
-						Transform sqr = Instantiate (square, transform.position, transform.rotation) as Transform;
-						sqr.parent = this.transform.parent;
+						CreateItem (square, yAdd);
 					}
 					if (types[i] == "circle") { 
-						Transform crcl = Instantiate (circle, transform.position, transform.rotation) as Transform;
-						crcl.parent = this.transform.parent;
+						CreateItem (circle, yAdd);
 					}
 					if (types[i] == "nice") { 
-						Transform nicely = Instantiate(nice, transform.position, transform.rotation) as Transform;
-						nicely.parent = this.transform.parent;
+						CreateItem (nice, yAdd);
 					}
 					if (types[i] == "nasty") { 
-						Transform naughty = Instantiate (nasty, transform.position, transform.rotation) as Transform;
-						naughty.parent = this.transform.parent;
+						CreateItem (nasty, yAdd);
 					}
 				}
 				flag = true;
@@ -102,6 +100,10 @@ public class TreeSpawn : MonoBehaviour {
 			}
 		}
 	}
+	void CreateItem(Transform toMake, Vector3 yAdd){
+		Transform newMake = Instantiate (toMake, transform.position + yAdd, transform.rotation) as Transform;
+		newMake.parent = this.transform.parent;
+		}
 	IEnumerator destroyWithSound()
 	{
 		yield return new WaitForSeconds(0.25f);
