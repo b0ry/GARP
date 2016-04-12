@@ -10,7 +10,6 @@ public class HealthBar : MonoBehaviour {
 	private int heal;
 	private float timer;
 	private float subTimer;
-	public Canvas ui;
 	public float top;
 	public float left;
 	public int hit = 0;
@@ -51,9 +50,6 @@ public class HealthBar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		left = -(ui.GetComponent<RectTransform>().rect.width / 2f);
-		top = ui.GetComponent<RectTransform>().rect.height / 2f;
-		transform.GetComponent<RectTransform>().anchoredPosition = new Vector2 (left + 125f, top - 33f);
 		if (hit != 0){
 			timer = 0f;
 			for (int i = no_cells - 1; i >= 0; i--) {

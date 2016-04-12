@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class ThirdPersonController : MonoBehaviour {
+	public GameObject smoke;
 	public Camera myCamera;
 	private enum CharacterState {
 		Idle = 0,
@@ -62,6 +63,7 @@ public class ThirdPersonController : MonoBehaviour {
 	private float lastGroundedTime = 0.0f;
 
 	private bool isControllable = true;
+	private static GameObject jumper;
 
 void Awake ()
 {
@@ -217,6 +219,8 @@ void ApplyJumping ()
 		if (canJump && Time.time < lastJumpButtonTime + jumpTimeout) {
 				float jump = gameObject.GetComponent<PlayerJumpGA>().jumpOUT;
 			jumpHeight = Random.Range(1.0f,5.0f)+jump;
+				jumper = (GameObject)Instantiate(smoke, transform.position, transform.rotation);
+				jumper.transform.parent = transform.parent;
 				/////////////////////////////
 				// Next gen goes here!
 				/////////////////////////////
@@ -234,7 +238,7 @@ void ApplyGravity ()
 	{
 		// Apply gravity
 		bool jumpButton = Input.GetButton("Jump");
-		
+
 		
 		// When we reach the apex of the jump we send out a message
 		if (jumping && !jumpingReachedApex && verticalSpeed <= 0.0f)

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using B83.ExpressionParser;
 
 public class Throw : MonoBehaviour {
-	public GameObject aoe;
 	public GameObject fireworks;
 	private float startTime;
 	public float time;
@@ -62,7 +61,6 @@ public class Throw : MonoBehaviour {
 	void OnCollisionEnter (Collision lngRange)
 	{
 		if(lngRange.gameObject.tag=="enemy"){
-			Rigidbody f = Instantiate(aoe, transform.position,transform.rotation)as Rigidbody;
 			Rigidbody g = Instantiate(fireworks, transform.position,transform.rotation)as Rigidbody;
 
 		}
