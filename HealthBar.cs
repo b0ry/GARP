@@ -60,7 +60,6 @@ public class HealthBar : MonoBehaviour {
 			}
 			for (int i = no_cells-1; i >= 0; i--) {
 				if (weight[i] <= 0){
-					Transform cell = transform.GetChild(i);
 					weight[i] = 0;
 					recharge = i;
 					heal = i;
@@ -100,7 +99,6 @@ public class HealthBar : MonoBehaviour {
 				int[] cTemp = new int[dif+1];
 				//weight.
 				for (int i = heal; i < no_cells; i++){
-					Transform toHeal = transform.GetChild(i);
 					cTemp[i-heal] = weight[Mathf.Abs (i - sum)];
 				}
 				for (int i = heal; i < no_cells; i++){

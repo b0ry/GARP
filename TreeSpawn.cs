@@ -100,15 +100,18 @@ public class TreeSpawn : MonoBehaviour {
 			}
 		}
 	}
+
 	void CreateItem(Transform toMake, Vector3 yAdd){
 		Transform newMake = Instantiate (toMake, transform.position + yAdd, transform.rotation) as Transform;
 		newMake.parent = this.transform.parent;
 		}
+
 	IEnumerator destroyWithSound()
 	{
 		yield return new WaitForSeconds(0.25f);
 		Destroy(this.gameObject);
 	}
+
 	IEnumerator Flash() 
 	{
 		gameObject.GetComponent<Renderer>().material.color = dudColour;
