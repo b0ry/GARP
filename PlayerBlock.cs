@@ -10,34 +10,36 @@ public class PlayerBlock : MonoBehaviour {
 	public bool flag;
 	public int damage;
 
-	void Strafe (string lr){
-		gameObject.GetComponentInChildren<Renderer>().material.color = gameObject.GetComponentInChildren<NewWalk>().normal;
-		flag = false;
-		for (int i = 0; i < 10; i++){
-			transform.Rotate(Vector3.forward, 10f * Time.deltaTime);
-		}
-	}
-
 	void FixedUpdate() {
 		TextMesh damCount = GetComponentInChildren<TextMesh>();
 		damCount.transform.rotation = Quaternion.LookRotation(damCount.transform.position - Camera.main.transform.position);
+		if (counter > 0) 
+			counter--;
+
+		if (counter == 0) 
+			damCount.text = "";
+
 		// Block
-		if (Input.GetKeyDown(KeyCode.S)){
+		if (Input.GetKeyDown(KeyCode.S))
 			flag = true;
-		}
+
 		if (Input.GetKey(KeyCode.S)){
 			for (int i = 0; i < 3; i++){
 				damage= Random.Range (1,11);
 				float rnd = ((float)damage/40f)+0.25f;
 				gameObject.transform.GetChild (i).GetComponent<Renderer>().material.color = new Color (rnd,rnd,1f,1f);
+
+				if (Input.GetKey(KeyCode.A)) {
+						gameObject.transform.GetChild (i).GetComponent<PlayerStrafeGA>().Strafe("Left");
+						transform.localPosition += Camera.main.transform.right * -Time.deltaTime;
+				}
+
+				if (Input.GetKey(KeyCode.D)) {
+						gameObject.transform.GetChild (i).GetComponent<PlayerStrafeGA>().Strafe("Right");
+					transform.localPosition += Camera.main.transform.right * Time.deltaTime;
+				}
 			}
-			/*
-			if (Input.GetKey(KeyCode.A) && Input.GetKey(KeyCode.S)){
-				Strafe("Left");
-			}
-			if (Input.GetKey(KeyCode.D) && Input.GetKey(KeyCode.S)){
-				Strafe("Right");
-			}*/
+
 		}
 		// Not Block
 		if (!Input.GetKey(KeyCode.S))

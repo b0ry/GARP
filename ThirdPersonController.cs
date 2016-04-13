@@ -236,10 +236,6 @@ void ApplyGravity ()
 {
 	if (isControllable)	// don't move player at all if not controllable.
 	{
-		// Apply gravity
-		bool jumpButton = Input.GetButton("Jump");
-
-		
 		// When we reach the apex of the jump we send out a message
 		if (jumping && !jumpingReachedApex && verticalSpeed <= 0.0f)
 		{

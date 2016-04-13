@@ -15,7 +15,6 @@ public class Throw : MonoBehaviour {
 	private ExpressionParser parser = new ExpressionParser();
 	private float audio;
 	private int random;
-	private Vector3 playerRot; 
 	private Rigidbody rb;
 	private GameObject player;
 	private float sine;
@@ -38,8 +37,8 @@ public class Throw : MonoBehaviour {
 		audio = GetComponent<AudioSource>().pitch;
 
 		random = Random.Range (0,2);
-		if (random == 0) { random = -1;}
-		playerRot = player.transform.eulerAngles;
+		if (random == 0) 
+			random = -1;
 
 	}
 

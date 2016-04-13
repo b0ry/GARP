@@ -104,7 +104,7 @@ void Apply (Transform dummyTarget, Vector3 dummyCenter)
 		if (AngleDistance (currentAngle, originalTargetAngle) < 3.0f)
 			snap = false;
 		
-		currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle,ref angleVelocity, snapSmoothLag, snapMaxSpeed);
+		currentAngle = Mathf.SmoothDampAngle(currentAngle, targetAngle, ref angleVelocity, snapSmoothLag, snapMaxSpeed);
 	}
 	// Normal camera motion
 	else

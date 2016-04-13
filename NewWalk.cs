@@ -3,7 +3,7 @@ using System.Collections;
 
 public class NewWalk : MonoBehaviour {
 	public GameObject smoke;
-	public float initial = 0f;
+	public float initial;
 	public float scale;
 	public Color normal;
 	private static GameObject run;
@@ -22,7 +22,7 @@ public class NewWalk : MonoBehaviour {
 		{
 			scale = Mathf.Sin(initial)/2f;
 			initial = initial + 0.05f;
-			transform.position = new Vector3(transform.position.x,transform.position.y*scale+2f,transform.position.z);
+			this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y*scale+1f, this.transform.position.z);
 		}
 		if (initial >= 3.2f) {
 			initial = 0f;
