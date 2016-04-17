@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class ThirdPersonController : MonoBehaviour {
-	public GameObject smoke;
 	public Camera myCamera;
 	private enum CharacterState {
 		Idle = 0,
@@ -86,7 +85,7 @@ void UpdateSmoothedMovementDirection ()
 	float v = Input.GetAxisRaw("Vertical");
 	float h = Input.GetAxisRaw("Horizontal");
 
-	// Are we moving backwards or looking backwards
+	// Don't move if pressing backwards
 	if (v < -0.2f){
 		movingBack = true;
 		v = -1f;
@@ -98,18 +97,18 @@ void UpdateSmoothedMovementDirection ()
 		movingBack = false;
 	
 	bool wasMoving = isMoving;
-	isMoving = Mathf.Abs (h) > 0.1f || Mathf.Abs (v) > 0.1f;
+	isMoving = Mathf.Abs (h) > 0.5f || Mathf.Abs (v) > 0.5f;
 		
 	// Target direction relative to the camera
 	Vector3 targetDirection = Vector3.zero;
 	bool isBlocking = Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow);
 	if (!isBlocking) 
 			targetDirection = h * right + v * forward;
-	//else
-	//targetDirection = Vector3.zero;
+
 	// Grounded controls
 	if (grounded)
 	{
+			Debug.Log("Grounded");
 		// Lock camera for short period when transitioning moving & standing still
 		lockCameraTimer += Time.deltaTime;
 		if (isMoving != wasMoving)
@@ -123,13 +122,7 @@ void UpdateSmoothedMovementDirection ()
 			// If we are really slow, just snap to the target direction
 			if (grounded)
 			{
-			//	moveDirection = targetDirection.normalized;
-			//}
-			// Otherwise smoothly turn towards it
-			//else
-			//{
-				moveDirection = Vector3.RotateTowards(moveDirection, targetDirection, rotateSpeed * Mathf.Deg2Rad * Time.deltaTime, 1000);
-				
+				moveDirection = Vector3.RotateTowards(moveDirection, targetDirection, rotateSpeed * Mathf.Deg2Rad * Time.deltaTime, 1000);			
 				moveDirection = moveDirection.normalized;
 			}
 		}
@@ -202,6 +195,7 @@ void UpdateSmoothedMovementDirection ()
 
 		if (isMoving)
 			inAirVelocity += targetDirection.normalized * Time.deltaTime * inAirControlAcceleration;
+			//Debug.Log(inAirVelocity);
 	}		
 }
 
@@ -217,14 +211,10 @@ void ApplyJumping ()
 		// - Only when pressing the button down
 		// - With a timeout so you can press the button slightly before landing		
 		if (canJump && Time.time < lastJumpButtonTime + jumpTimeout) {
-				float jump = gameObject.GetComponent<PlayerJumpGA>().jumpOUT;
+			float jump = gameObject.GetComponent<PlayerJumpGA>().jumpOUT;
 			jumpHeight = Random.Range(1.0f,5.0f)+jump;
-				jumper = (GameObject)Instantiate(smoke, transform.position, transform.rotation);
-				jumper.transform.parent = transform.parent;
-				/////////////////////////////
-				// Next gen goes here!
-				/////////////////////////////
 			gameObject.GetComponent<PlayerJumpGA>().AddToList(jumpHeight);
+
 			verticalSpeed = CalculateJumpVerticalSpeed (jumpHeight);
 			SendMessage("DidJump", SendMessageOptions.DontRequireReceiver);
 		}
@@ -283,8 +273,6 @@ void Update() {
 	UpdateSmoothedMovementDirection();
 	
 	// Apply gravity
-	// - extra power jump modifies gravity
-	// - controlledDescent mode modifies gravity
 	ApplyGravity ();
 
 	// Apply jumping logic
@@ -326,13 +314,7 @@ void Update() {
 		}
 	}
 }
-
-//ControllerColliderHit OnControllerColliderHit (ControllerColliderHit hit)
-//{
-//	Debug.DrawRay(hit.point, hit.normal);
-//	if (hit.moveDirection.y > 0.01f) 
-//		return;
-//}
+	
 
 float GetSpeed () {
 	return moveSpeed;

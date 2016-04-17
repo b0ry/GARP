@@ -39,7 +39,7 @@ public class PlayerBlockGA : MonoBehaviour {
 		int rnd = Random.Range(0,50*level);
 		if (rnd < 10*level) {blockEffectOUT[rnd] = Random.Range (1,11)*10;}
 		level++;
-		gameObject.GetComponent<Morph>().MorphNGrow ("square");
+		gameObject.GetComponent<LevelUp>().NextLevel("Block");
 		average = (float)blockEffectOUT.Average ();
 
 	}

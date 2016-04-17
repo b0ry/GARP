@@ -131,7 +131,7 @@ public class PlayerAttackGA : MonoBehaviour {
 		damageOUT = fullDamage/(level*10);
 
 		level++;
-		gameObject.GetComponent<Morph>().MorphNGrow ("triangle");
+		gameObject.GetComponent<LevelUp>().NextLevel("Attack");
 	}
 
 }
