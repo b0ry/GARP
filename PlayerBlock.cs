@@ -28,19 +28,9 @@ public class PlayerBlock : MonoBehaviour {
 				damage= Random.Range (1,11);
 				float rnd = ((float)damage/40f)+0.25f;
 				gameObject.transform.GetChild (i).GetComponent<Renderer>().material.color = new Color (rnd,rnd,1f,1f);
-
-				if (Input.GetKey(KeyCode.A)) {
-						gameObject.transform.GetChild (i).GetComponent<PlayerStrafeGA>().Strafe("Left");
-						transform.localPosition += Camera.main.transform.right * -Time.deltaTime;
-				}
-
-				if (Input.GetKey(KeyCode.D)) {
-						gameObject.transform.GetChild (i).GetComponent<PlayerStrafeGA>().Strafe("Right");
-					transform.localPosition += Camera.main.transform.right * Time.deltaTime;
-				}
 			}
-
 		}
+
 		// Not Block
 		if (!Input.GetKey(KeyCode.S))
 		{

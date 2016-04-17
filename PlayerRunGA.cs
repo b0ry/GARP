@@ -28,6 +28,6 @@ public class PlayerRunGA : MonoBehaviour {
 		level++;
 		runIN.Clear ();
 		cdIN.Clear ();
-		gameObject.GetComponent<Morph>().MorphNGrow ("circle");
+		gameObject.GetComponent<LevelUp>().NextLevel("Run");
 	}
 }
