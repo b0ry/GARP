@@ -2,7 +2,19 @@ using UnityEngine;
 using System.Collections;
 
 public class ThirdPersonController : MonoBehaviour {
+	public int hits;
+	public GameObject hit;
+	public float blockEffect ;
+	private bool blockFlag;
+	private int damage;
+
+	public GameObject projectile;
+	public GameObject holder;
+
+	public GameObject smoke;
+
 	public Camera myCamera;
+
 	private enum CharacterState {
 		Idle = 0,
 		Walking = 1,
@@ -15,29 +27,28 @@ public class ThirdPersonController : MonoBehaviour {
 	public float oldCooldown = 5.0f;
 	public float cooldown = 5.0f;
 	public bool flag = false;
+	public bool canJump = true;
 	private CharacterState _characterState;
 
-	public float walkSpeed = 2.0f; // The speed when walking
-	public float trotSpeed = 4.0f; // after trotAfterSeconds of walking we trot with trotSpeed
-	public float runSpeed = 6.0f; // when pressing "Fire3" button (shift) we start running
+	private float walkSpeed = 6.0f; // The speed when walking
+	private float trotSpeed = 7.0f; // after trotAfterSeconds of walking we trot with trotSpeed
+	private float runSpeed = 9.0f; // when pressing "Fire3" button (shift) we start running
 
-	public float inAirControlAcceleration = 3.0f;
-	public float jumpHeight = 0.5f;// How high do we jump when pressing jump and letting go immediately
+	private float inAirControlAcceleration = 3.0f;
+	private float jumpHeight = 0.5f;// How high do we jump when pressing jump and letting go immediately
 	
-	public float gravity = 20.0f; // The gravity for the character
-	public float speedSmoothing = 10.0f; // The gravity in controlled descent mode
-	public float rotateSpeed = 500.0f;
+	private float gravity = 20.0f; // The gravity for the character
+	private float speedSmoothing = 10.0f; // The gravity in controlled descent mode
+	private float rotateSpeed = 500.0f;
 
-	public float trotAfterSeconds = 3.0f;
-
-	public bool canJump = true;
+	private float trotAfterSeconds = 3.0f;
 
 	private float jumpRepeatTime = 0.05f;
 	private float jumpTimeout = 0.15f;
 	private float groundedTimeout = 0.25f;
 
 	// The camera doesnt start following the target immediately but waits for a split second to avoid too much waving around.
-	private float lockCameraTimer = 0.0f; // The camera doesnt start following the target immediately but waits for a split second to avoid too much waving around.
+	private float lockCameraTimer = 0.3f; // The camera doesnt start following the target immediately but waits for a split second to avoid too much waving around.
 
 
 	private Vector3 moveDirection = Vector3.zero; // The current move direction in x-z
@@ -67,6 +78,39 @@ public class ThirdPersonController : MonoBehaviour {
 void Awake ()
 {
 	moveDirection = transform.TransformDirection(Vector3.forward);	
+}
+
+void PlayerFire(){
+	if (!blockFlag){
+		GameObject h = (GameObject)Instantiate(holder,new Vector3(transform.localPosition.x, transform.localPosition.y+0.5f, transform.localPosition.z+1f),transform.localRotation);
+		GameObject g = (GameObject)Instantiate(projectile,h.transform.position,h.transform.rotation);
+		g.transform.SetParent (h.transform);
+		Destroy (g,3f);
+		Destroy (h,3f);
+	}
+}
+
+void Block() {
+		
+	// Block
+	if (Input.GetKeyDown(KeyCode.S))
+		blockFlag = true;
+	
+	if (Input.GetKey(KeyCode.S)){
+		for (int i = 0; i < 3; i++){
+			damage= Random.Range (1,11);
+			float rnd = ((float)damage/40f)+0.25f;
+			gameObject.transform.GetChild (i).GetComponent<Renderer>().material.color = new Color (rnd,rnd,1f,1f);
+		}
+	}
+	// Not Block
+	else
+	{
+		blockFlag = false;
+		for (int i = 0; i < 3; i++){
+			gameObject.transform.GetChild (i).GetComponent<Renderer>().material.color = gameObject.transform.GetChild (i).GetComponent<ShapeMove>().normal;
+		}
+	}
 }
 
 void UpdateSmoothedMovementDirection ()
@@ -108,7 +152,14 @@ void UpdateSmoothedMovementDirection ()
 	// Grounded controls
 	if (grounded)
 	{
-			Debug.Log("Grounded");
+			for (int i = 0; i < 3; i++){
+				float bounce = gameObject.transform.GetChild (i).GetComponent<ShapeMove>().initial;
+				if( bounce < 3f || isMoving)
+				{
+					gameObject.transform.GetChild (i).GetComponent<ShapeMove>().Bounce();
+				}
+			}
+
 		// Lock camera for short period when transitioning moving & standing still
 		lockCameraTimer += Time.deltaTime;
 		if (isMoving != wasMoving)
@@ -150,10 +201,14 @@ void UpdateSmoothedMovementDirection ()
 					}
 					runSpeed = Random.Range (7.0f,10.0f)+run;
 					gameObject.GetComponent<PlayerRunGA>().AddToList(runSpeed, cooldown);
+
+					GameObject runShape = (GameObject)Instantiate(smoke, transform.position, transform.rotation);
+					runShape.transform.parent = this.transform;
+					Destroy (runShape, 5f);
+
 					flag = true;
 				}
 				runTimer -= Time.deltaTime;
-
 				targetSpeed *= runSpeed;
 				_characterState = CharacterState.Running;
 			}
@@ -256,8 +311,19 @@ void DidJump ()
 	lastJumpButtonTime = -10f;
 }
 
-void Update() {
+void FixedUpdate() {
+	if( Input.GetMouseButtonDown(0)) {InvokeRepeating("PlayerFire",0f,0.5f);}
+	if( Input.GetMouseButtonUp(0)) {CancelInvoke("PlayerFire");}
+	
 	coolTimer += Time.deltaTime;
+	for (int j=0; j < 3; j++) {
+		if (Input.GetKey (KeyCode.S) && Input.GetKey (KeyCode.A)) {
+			gameObject.transform.GetChild (j).GetComponent<PlayerStrafeGA>().Strafe ("Left");
+		}
+		if (Input.GetKey (KeyCode.S) && Input.GetKey (KeyCode.D)) {
+			gameObject.transform.GetChild (j).GetComponent<PlayerStrafeGA>().Strafe ("Right");
+		}
+	}
 	
 	if (!isControllable)
 	{
@@ -271,6 +337,8 @@ void Update() {
 	}
 
 	UpdateSmoothedMovementDirection();
+
+	Block ();
 	
 	// Apply gravity
 	ApplyGravity ();
@@ -314,6 +382,57 @@ void Update() {
 		}
 	}
 }
+
+	void OnCollisionEnter(Collision slash){
+		if (slash.gameObject.tag == "slash"){
+			GameObject healthBar = GameObject.Find("Health Bar");
+			int level = transform.GetComponent<PlayerBlockGA>().level;
+			if (!blockFlag){
+				healthBar.GetComponent<HealthBar>().hit = damage;
+				Rigidbody g = Instantiate(hit,transform.position,transform.rotation)as Rigidbody;
+				for (int i = 0; i < 3; i++){
+					gameObject.transform.GetChild (i).GetComponent<PlayerCell>().Flash ();
+				}
+			}
+			else if (level == 1) {
+				blockEffect = Random.value;
+				float newDam = (1-blockEffect) * (float)damage;
+				healthBar.GetComponent<HealthBar>().hit = (int)newDam;
+				TextMesh damCount = GetComponentInChildren<TextMesh>();
+				blockEffect *= 100;
+				int block4text = (int)blockEffect;
+				damCount.text = block4text.ToString () + "%";
+				int counter = GetComponentInChildren<ShowText>().counter;
+				counter = 50;
+				transform.GetComponent<PlayerBlockGA>().AddToList(block4text);
+				hits++;
+			}
+			else {
+				int rnd = Random.Range (0,transform.GetComponent<PlayerBlockGA>().blockEffectOUT.Count);
+				int block4text = transform.GetComponent<PlayerBlockGA>().blockEffectOUT[rnd];
+				blockEffect = 1-((float)block4text/100f);
+				//block4text = 100 - block4text;
+				int mutation = Random.Range (0,10);
+				if (mutation == 0) { 
+					blockEffect = Random.Range(0.0f, 0.5f);
+					blockEffect *= 100;
+					block4text = 100-(int)blockEffect;
+					Debug.Log (blockEffect);
+				}
+				float newDam = blockEffect * (float)damage;
+				healthBar.GetComponent<HealthBar>().hit = (int)newDam;
+				TextMesh damCount = GetComponentInChildren<TextMesh>();
+				damCount.text = block4text.ToString () + "%";
+				int counter = GetComponentInChildren<ShowText>().counter;
+				counter = 50;
+				int idx = transform.GetComponent<PlayerBlockGA>().i;
+				if (idx == 0) { 
+					transform.GetComponent<PlayerBlockGA>().blockEffectIN.Clear();
+				}
+				transform.GetComponent<PlayerBlockGA>().AddToList(block4text);
+			}
+		}
+	}
 	
 
 float GetSpeed () {

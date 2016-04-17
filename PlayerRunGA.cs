@@ -22,7 +22,7 @@ public class PlayerRunGA : MonoBehaviour {
 	}
 
 	void CrossoverMutation(){
-		int hits = gameObject.GetComponent<PlayerBlock> ().hits;
+		int hits = gameObject.GetComponent<ThirdPersonController> ().hits;
 		runOUT = runIN.Average () / 10f - 0.01f * (float)hits;
 		cdOUT  = 5f/cdIN.Average () - 0.01f * (float)hits;
 		level++;

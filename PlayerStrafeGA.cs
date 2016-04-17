@@ -14,17 +14,11 @@ public class PlayerStrafeGA : MonoBehaviour {
 
 	public void Update() {
 		timer += Time.deltaTime;
-		if (Input.GetKey (KeyCode.S) && Input.GetKey (KeyCode.A)) {
-			Strafe ("Left");
-		}
-		if (Input.GetKey (KeyCode.S) && Input.GetKey (KeyCode.D)) {
-			Strafe ("Right");
-		}
 	}
 
-	void Strafe (string lr){
+	public void Strafe (string lr){
 		float newSpeed = Random.Range(0.8f,2f) + strafeOUT;
-		gameObject.GetComponent<Renderer> ().material.color = gameObject.GetComponent<NewWalk> ().normal;
+		gameObject.GetComponent<Renderer> ().material.color = gameObject.GetComponent<ShapeMove> ().normal;
 		if (lr == "Left") transform.Rotate (transform.forward*newSpeed);	
 		if (lr == "Right") transform.Rotate (transform.forward*-newSpeed);	
 		if (flag) {
@@ -47,7 +41,7 @@ public class PlayerStrafeGA : MonoBehaviour {
 			for (int j = 0; j < 10*level; j ++) {
 				fullStrafe += strafeIN [j];
 			}
-			int hits = gameObject.GetComponentInParent<PlayerBlock> ().hits;
+			int hits = gameObject.GetComponentInParent<ThirdPersonController> ().hits;
 			strafeOUT = fullStrafe / (10 * level);
 			strafeIN.Clear ();
 			level++;
