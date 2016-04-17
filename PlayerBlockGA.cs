@@ -14,7 +14,7 @@ public class PlayerBlockGA : MonoBehaviour {
 		blockEffectIN.Add(blockEffect);
 		i++;
 		if(i == level*10){
-			gameObject.GetComponent<PlayerBlock>().hits = 0;
+			gameObject.GetComponent<ThirdPersonController>().hits = 0;
 			i = 0;
 			CrossoverMutation();
 		}

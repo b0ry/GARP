@@ -25,7 +25,7 @@ public class PlayerJumpGA : MonoBehaviour {
 	
 	}
 	void CrossoverMutation(){
-		int hits = gameObject.GetComponent<PlayerBlock> ().hits;
+		int hits = gameObject.GetComponent<ThirdPersonController> ().hits;
 	 	jumpOUT = jumpIN.Average () / 10f - 0.01f*(float)hits;
 		level++;
 		jumpIN.Clear ();
