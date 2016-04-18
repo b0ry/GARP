@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using GARP.GA;
 
 public class PlayerStrafeGA : MonoBehaviour {
 	public List<float> strafeIN = new List<float>();
@@ -25,14 +26,16 @@ public class PlayerStrafeGA : MonoBehaviour {
 				if (lr == "Left") transform.parent.localPosition += Camera.main.transform.right * -Time.deltaTime*newSpeed;
 				if (lr == "Right") transform.parent.localPosition += Camera.main.transform.right * Time.deltaTime*newSpeed;
 				if (timer >= 1f) { 
-					AddToList (newSpeed);
+					Strafe strafe = new Strafe();
+				strafe.strafe = newSpeed;
+					AddToStrafeList (strafe);
 					timer = 0f;
 				}
 			}
 		}
 
-	void AddToList(float spd) {
-		strafeIN.Add (spd);
+	void AddToStrafeList(Strafe strafe) {
+		strafeIN.Add (strafe.strafe);
 		i++;
 
 		if (i == level * 10) {
@@ -45,7 +48,7 @@ public class PlayerStrafeGA : MonoBehaviour {
 			strafeOUT = fullStrafe / (10 * level);
 			strafeIN.Clear ();
 			level++;
-			gameObject.GetComponentInParent<LevelUp>().NextLevel("Strafe");
+			SendMessage ("NextLevel", "Strafe", SendMessageOptions.DontRequireReceiver);
 
 		}
 	}
