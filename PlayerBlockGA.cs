@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using GARP.GA;
 
 public class PlayerBlockGA : MonoBehaviour {
 	public List<int> blockEffectIN = new List<int>();
@@ -10,8 +11,8 @@ public class PlayerBlockGA : MonoBehaviour {
 	public int i = 0;
 	public List<int> blockEffectOUT = new List<int>();
 
-	public void AddToList(int blockEffect) {
-		blockEffectIN.Add(blockEffect);
+	public void AddToBlockList(Block block) {
+		blockEffectIN.Add(block.block);
 		i++;
 		if(i == level*10){
 			gameObject.GetComponent<ThirdPersonController>().hits = 0;
@@ -39,7 +40,7 @@ public class PlayerBlockGA : MonoBehaviour {
 		int rnd = Random.Range(0,50*level);
 		if (rnd < 10*level) {blockEffectOUT[rnd] = Random.Range (1,11)*10;}
 		level++;
-		gameObject.GetComponent<LevelUp>().NextLevel("Block");
+		SendMessage ("NextLevel", "Block", SendMessageOptions.DontRequireReceiver);
 		average = (float)blockEffectOUT.Average ();
 
 	}

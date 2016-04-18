@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using GARP.GA;
 
 public class PlayerRunGA : MonoBehaviour {
 	public List<float> runIN = new List<float>();
@@ -11,9 +12,9 @@ public class PlayerRunGA : MonoBehaviour {
 	public float cdOUT = 0.0f;
 	public int i = 0;
 	
-	public void AddToList(float run, float cooldown) {
-		runIN.Add(run);
-		cdIN.Add (cooldown);
+	public void AddToRunList(Run run) {
+		runIN.Add(run.speed);
+		cdIN.Add (run.cooldown);
 		i++;
 		if(i == level*10){
 			i = 0;
@@ -28,6 +29,6 @@ public class PlayerRunGA : MonoBehaviour {
 		level++;
 		runIN.Clear ();
 		cdIN.Clear ();
-		gameObject.GetComponent<LevelUp>().NextLevel("Run");
+		SendMessage ("NextLevel", "Run", SendMessageOptions.DontRequireReceiver);
 	}
 }

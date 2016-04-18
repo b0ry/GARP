@@ -21,17 +21,11 @@ public class PlayerCell : MonoBehaviour {
 			initial = 0f;
 		}
 		transform.localScale = new Vector3(transform.localScale.x,scale,transform.localScale.z);
-		/*
-			Time.timeScale = 0;
-			if (Input.GetKey(KeyCode.P))
-			{
-			Time.timeScale = 1;
-			}
-			
-		*/	
 		}
+
 	public void Flash (){
-			StartCoroutine ("Flasher");
+		Flasher ();
+			StartCoroutine (Flasher());
 	}
 	IEnumerator Flasher() 
 	{

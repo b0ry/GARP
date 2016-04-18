@@ -89,7 +89,7 @@ public class TreeSpawn : MonoBehaviour {
 					}
 				}
 				flag = true;
-				gameObject.GetComponentInParent<TreeChromosones>().TreeHit();
+				SendMessageUpwards("TreeHit", SendMessageOptions.DontRequireReceiver);
 				destroyWithSound ();
 				StartCoroutine(destroyWithSound());
 			}

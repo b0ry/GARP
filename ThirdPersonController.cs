@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using GARP.GA;
 
 public class ThirdPersonController : MonoBehaviour {
 	public int hits;
@@ -156,7 +157,7 @@ void UpdateSmoothedMovementDirection ()
 				float bounce = gameObject.transform.GetChild (i).GetComponent<ShapeMove>().initial;
 				if( bounce < 3f || isMoving)
 				{
-					gameObject.transform.GetChild (i).GetComponent<ShapeMove>().Bounce();
+					BroadcastMessage("Bounce", SendMessageOptions.DontRequireReceiver);
 				}
 			}
 
@@ -200,7 +201,10 @@ void UpdateSmoothedMovementDirection ()
 						cooldown = 0;
 					}
 					runSpeed = Random.Range (7.0f,10.0f)+run;
-					gameObject.GetComponent<PlayerRunGA>().AddToList(runSpeed, cooldown);
+					Run run4list = new Run();
+					run4list.speed = runSpeed;
+					run4list.cooldown = cooldown;
+					SendMessage("AddToRunList", run4list, SendMessageOptions.DontRequireReceiver);
 
 					GameObject runShape = (GameObject)Instantiate(smoke, transform.position, transform.rotation);
 					runShape.transform.parent = this.transform;
@@ -311,20 +315,19 @@ void DidJump ()
 	lastJumpButtonTime = -10f;
 }
 
-void FixedUpdate() {
+void Update() {
 	if( Input.GetMouseButtonDown(0)) {InvokeRepeating("PlayerFire",0f,0.5f);}
 	if( Input.GetMouseButtonUp(0)) {CancelInvoke("PlayerFire");}
 	
 	coolTimer += Time.deltaTime;
-	for (int j=0; j < 3; j++) {
-		if (Input.GetKey (KeyCode.S) && Input.GetKey (KeyCode.A)) {
-			gameObject.transform.GetChild (j).GetComponent<PlayerStrafeGA>().Strafe ("Left");
-		}
-		if (Input.GetKey (KeyCode.S) && Input.GetKey (KeyCode.D)) {
-			gameObject.transform.GetChild (j).GetComponent<PlayerStrafeGA>().Strafe ("Right");
-		}
+
+	if (Input.GetKey (KeyCode.S) && Input.GetKey (KeyCode.A)) {
+		BroadcastMessage("Strafe","Left",SendMessageOptions.DontRequireReceiver);
 	}
-	
+	if (Input.GetKey (KeyCode.S) && Input.GetKey (KeyCode.D)) {
+		BroadcastMessage("Strafe","Right",SendMessageOptions.DontRequireReceiver);
+	}
+
 	if (!isControllable)
 	{
 		// kill all inputs if not controllable.
@@ -390,9 +393,7 @@ void FixedUpdate() {
 			if (!blockFlag){
 				healthBar.GetComponent<HealthBar>().hit = damage;
 				Rigidbody g = Instantiate(hit,transform.position,transform.rotation)as Rigidbody;
-				for (int i = 0; i < 3; i++){
-					gameObject.transform.GetChild (i).GetComponent<PlayerCell>().Flash ();
-				}
+				BroadcastMessage("PlayerFlash", SendMessageOptions.DontRequireReceiver);
 			}
 			else if (level == 1) {
 				blockEffect = Random.value;
@@ -404,7 +405,9 @@ void FixedUpdate() {
 				damCount.text = block4text.ToString () + "%";
 				int counter = GetComponentInChildren<ShowText>().counter;
 				counter = 50;
-				transform.GetComponent<PlayerBlockGA>().AddToList(block4text);
+				Block block = new Block();
+				block.block = block4text;
+				SendMessage("AddToBlockList", block, SendMessageOptions.DontRequireReceiver);
 				hits++;
 			}
 			else {
@@ -429,7 +432,9 @@ void FixedUpdate() {
 				if (idx == 0) { 
 					transform.GetComponent<PlayerBlockGA>().blockEffectIN.Clear();
 				}
-				transform.GetComponent<PlayerBlockGA>().AddToList(block4text);
+				Block block = new Block();
+				block.block = block4text;
+				SendMessage("AddToBlockList", block, SendMessageOptions.DontRequireReceiver);
 			}
 		}
 	}

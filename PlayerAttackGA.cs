@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using GARP.GA;
 
 public class PlayerAttackGA : MonoBehaviour {
 	public List<string> xDirIN = new List<string>();
@@ -20,11 +21,11 @@ public class PlayerAttackGA : MonoBehaviour {
 	public int damageOUT;
 
 	// Use this for initialization
-	public void AddToList(int dmg, float rng, string x, string z) {
-		xDirIN.Add (x);
-		zDirIN.Add (z);
-		damageIN.Add (dmg);
-        rangeIN.Add (rng);
+	public void AddToAttackList(Attack attack) {
+		xDirIN.Add (attack.x);
+		zDirIN.Add (attack.z);
+		damageIN.Add (attack.damage);
+        rangeIN.Add (attack.range);
 		i++;
 		if(i == level*10){
 			i = 0;
@@ -131,7 +132,7 @@ public class PlayerAttackGA : MonoBehaviour {
 		damageOUT = fullDamage/(level*10);
 
 		level++;
-		gameObject.GetComponent<LevelUp>().NextLevel("Attack");
+		SendMessage ("NextLevel", "Attack", SendMessageOptions.DontRequireReceiver);
 	}
 
 }

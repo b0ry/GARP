@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GARP.GA;
 
 public class EnemyHit : MonoBehaviour {
 
@@ -27,15 +28,16 @@ public class EnemyHit : MonoBehaviour {
 			damCount.text = damage4List.ToString ();		
 			counter = 50;
 			float weight = projectile.transform.GetComponent<Throw>().weight * 10f;
-			damage4List = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().damageOUT + (int)weight;
-			range4List = projectile.transform.GetComponent<Throw>().range;
 
-			xdir4List = projectile.transform.GetComponent<PlayerAttack>().outputX;
-			zdir4List = projectile.transform.GetComponent<PlayerAttack>().outputZ;
+			Attack attack = new Attack();
+			attack.damage = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().damageOUT + (int)weight;
+			attack.range = projectile.transform.GetComponent<Throw>().range;
+			attack.x = projectile.transform.GetComponent<PlayerAttack>().outputX;
+			attack.z = projectile.transform.GetComponent<PlayerAttack>().outputZ;
+
 
 			GameObject player = GameObject.Find("MyPlayer");
-			player.transform.GetComponent<PlayerAttackGA>().AddToList(damage4List,range4List,xdir4List,zdir4List);
-
+			player.GetComponent<PlayerAttackGA>().AddToAttackList(attack);
 
 		}
 	}

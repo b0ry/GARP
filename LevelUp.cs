@@ -38,7 +38,7 @@ public class LevelUp : MonoBehaviour {
 		int max = levels [0];
 		gameObject.GetComponent<SphereCollider> ().radius = max;
 
-		gameObject.GetComponent<Morph>().MorphNGrow (shape);
+		SendMessage ("MorphNGrow", shape, SendMessageOptions.DontRequireReceiver);
 	}
 
 	// Use this for initialization

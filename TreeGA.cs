@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using GARP.GA;
 
 public class TreeGA : MonoBehaviour {
 	public int treeCounter;
@@ -28,20 +29,18 @@ public class TreeGA : MonoBehaviour {
 		}
 	}
 
-	public void RankTree(int trngl, int sqr, int crcl, int nice, int nasty, Vector3 size, Color shade, List<string> types){
-		trnglVals[i] = trngl;
-		sqrVals[i] = sqr;
-		crclVals[i] =  crcl;
-		niceVals[i] = nasty;
-		nastyVals[i] = nice;
-		sizes[i] = size;
-		shades[i] = shade;
-		typess[i] = types;
-
+	public void RankTree(Bush treeIN){
+		trnglVals[i] = treeIN.triangles;
+		sqrVals[i] = treeIN.squares;
+		crclVals[i] =  treeIN.circles;
+		niceVals[i] = treeIN.nasty;
+		nastyVals[i] = treeIN.nice;
+		sizes[i] = treeIN.size;
+		shades[i] = treeIN.shade;
+		typess[i] = treeIN.types;
 		i++;
 
 		if (i == children) {
-			Debug.Log ("Ranking  " + transform.name);
 			i = 0;
 			level++;
 			int triSum = SumArray(trnglVals);
@@ -49,12 +48,13 @@ public class TreeGA : MonoBehaviour {
 			int cirSum = SumArray(crclVals);
 			int nstySum = SumArray(nastyVals);
 			int niceSum = SumArray(niceVals);
+
 			Color addHue = new Color (0.15f,-0.1f,0f,0f);
 			if (sqrSum > triSum) {addHue = new Color(-0.1f,0f,0.15f,0f);}
 			if (cirSum > sqrSum) {addHue = new Color(0.1f,0.075f,-0.15f,0f);}
 			if (nstySum > cirSum) {addHue = new Color(0.08f,0.085f,0.075f,0f);}
 			if (niceSum > nstySum) {addHue = new Color(-0.085f,-0.075f,-0.8f,0f);}
-			Debug.Log(addHue);
+
 			for (int j=0; j < children; j++){
 				fitness[j] = trnglVals[j] + sqrVals[j] + crclVals[j];
 				float rndR = Random.Range (0.01f,0.05f);
