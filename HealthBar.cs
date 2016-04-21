@@ -12,7 +12,7 @@ public class HealthBar : MonoBehaviour {
 	private float subTimer;
 	public float top;
 	public float left;
-	public int hit = 0;
+	public int currentDamage = 1;
 	private GameObject player;
 	private int min = 10;
 	private int max = 0;
@@ -27,6 +27,31 @@ public class HealthBar : MonoBehaviour {
 			weight[i] = i+1;
 		}
 		ShuffleArray (weight);
+		Mutate ();
+	}
+
+	// Update is called once per frame
+	void Update () {
+		if (currentDamage != 0){
+			timer = 0f;
+			SubtractHealth ();
+			currentDamage = 0;
+		}
+		SetIndividualCells ();
+		Regen ();
+		timer += Time.deltaTime;
+	}
+
+	public static void ShuffleArray(int[] arr) {
+		for (int i = arr.Length - 1; i > 0; i--) {
+			int r = Random.Range(0, i + 1);
+			int tmp = arr[i];
+			arr[i] = arr[r];
+			arr[r] = tmp;
+		}
+	}
+
+	void Mutate() {
 		weight[0] = 10;
 		no_cells = transform.childCount;
 		for (int i = 0; i < no_cells; i++){
@@ -39,35 +64,21 @@ public class HealthBar : MonoBehaviour {
 		}
 	}
 
-	public static void ShuffleArray(int[] arr) {
-		for (int i = arr.Length - 1; i > 0; i--) {
-			int r = Random.Range(0, i + 1);
-			int tmp = arr[i];
-			arr[i] = arr[r];
-			arr[r] = tmp;
+	void SubtractHealth() {
+		for (int i = no_cells - 1; i >= 0; i--) {
+			if (weight[i] > 0){
+				weight[i] -= currentDamage;
+				break;
+			}
+			else {
+				weight[i] = 0;
+				recharge = i;
+				heal = i;
+			}
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (hit != 0){
-			timer = 0f;
-			for (int i = no_cells - 1; i >= 0; i--) {
-				if (weight[i] > 0){
-					weight[i] -= hit;
-					break;
-				}
-			}
-			for (int i = no_cells-1; i >= 0; i--) {
-				if (weight[i] <= 0){
-					weight[i] = 0;
-					recharge = i;
-					heal = i;
-				}
-				 
-			}
-			hit = 0;
-		}
+
+	void SetIndividualCells () {
 		for (int i = 0; i < no_cells; i++){
 			Transform cell = transform.GetChild(i);
 			if (weight[i] > 0){
@@ -77,13 +88,15 @@ public class HealthBar : MonoBehaviour {
 				cell.localScale = new Vector3(0.05f,0.05f,0f);
 			}
 		}
-		subTimer += Time.deltaTime;
+	}
 
+	void Regen() {
+		subTimer += Time.deltaTime;
 		if(timer > 3f && recharge >= 0 && subTimer > 0.5f ){
 			subTimer = 0f;
 			Transform cell = transform.GetChild(recharge);
 			int cellDamage = cell.GetComponent<HealthCell>().damage;
-
+			
 			if (weight[recharge] < cellDamage){
 				weight[recharge]++;
 			}
@@ -122,10 +135,8 @@ public class HealthBar : MonoBehaviour {
 				timer = 0f;
 				weight[minIdx] = weight[maxIdx];
 				transform.GetChild(minIdx).GetComponent<HealthCell>().damage = weight[maxIdx];
-				GameObject.Find("MyPlayer").GetComponent<Morph>().MorphNGrow ("square");
+				//GameObject.Find("MyPlayer").GetComponent<Morph>().MorphNGrow ("square");
 			}
 		}
-
-		timer += Time.deltaTime;
 	}
 }

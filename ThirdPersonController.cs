@@ -389,16 +389,16 @@ void Update() {
 	void OnCollisionEnter(Collision slash){
 		if (slash.gameObject.tag == "slash"){
 			GameObject healthBar = GameObject.Find("Health Bar");
-			int level = transform.GetComponent<PlayerBlockGA>().level;
+			int level = transform.GetComponent<PlayerBlockGA>().levels.blockLevel;
 			if (!blockFlag){
-				healthBar.GetComponent<HealthBar>().hit = damage;
+				healthBar.GetComponent<HealthBar>().currentDamage = damage;
 				Rigidbody g = Instantiate(hit,transform.position,transform.rotation)as Rigidbody;
 				BroadcastMessage("PlayerFlash", SendMessageOptions.DontRequireReceiver);
 			}
 			else if (level == 1) {
 				blockEffect = Random.value;
 				float newDam = (1-blockEffect) * (float)damage;
-				healthBar.GetComponent<HealthBar>().hit = (int)newDam;
+				healthBar.GetComponent<HealthBar>().currentDamage = (int)newDam;
 				TextMesh damCount = GetComponentInChildren<TextMesh>();
 				blockEffect *= 100;
 				int block4text = (int)blockEffect;
@@ -423,7 +423,7 @@ void Update() {
 					Debug.Log (blockEffect);
 				}
 				float newDam = blockEffect * (float)damage;
-				healthBar.GetComponent<HealthBar>().hit = (int)newDam;
+				healthBar.GetComponent<HealthBar>().currentDamage = (int)newDam;
 				TextMesh damCount = GetComponentInChildren<TextMesh>();
 				damCount.text = block4text.ToString () + "%";
 				int counter = GetComponentInChildren<ShowText>().counter;

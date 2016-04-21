@@ -7,17 +7,24 @@ public class Ard : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		DefineArc ();
+	}
+	
+	// Update is called once per frame
+	void Update () {
+		MoveArc ();
+	}
+
+	void DefineArc() {
 		float range = Random.Range (5f, 10f);
 		float angle = Mathf.Deg2Rad*Random.Range (0f, 360f);
 		float x = range * Mathf.Sin (angle);
 		float z = range * Mathf.Cos (angle);
 		endPos = new Vector3 (transform.localPosition.x + x, transform.localPosition.y, transform.localPosition.z + z);
-		Debug.Log (endPos);
 		startTime = Time.time;
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+	void MoveArc() {
 		float time = Random.Range (2f, 3f);
 		Vector3 center = (transform.localPosition + endPos) * 0.5f;
 		center -= new Vector3(0f, 3f, 0f);
