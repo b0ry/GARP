@@ -37,6 +37,8 @@ public class ItemCollect : MonoBehaviour {
 		}
 	}
 	IEnumerator KerChing() {
+		// This is an enum/yield jobby simply so that the sound plays before the object is destroyed.
+		// This is not the right way to do it.
 		gameObject.GetComponentInParent<AudioSource>().Play();
 		yield return new WaitForSeconds(0.3f);
 		Destroy (gameObject);

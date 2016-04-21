@@ -3,18 +3,22 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using GARP.GA;
+using GARP.Useful;
 
 public class PlayerBlockGA : MonoBehaviour {
 	public List<int> blockEffectIN = new List<int>();
 	public float average = 0f;
-	public int level = 1;
+	public Levels levels;
 	public int i = 0;
 	public List<int> blockEffectOUT = new List<int>();
 
+	public void Start () {
+		levels = Singleton<Levels>.Unique;
+	}
 	public void AddToBlockList(Block block) {
 		blockEffectIN.Add(block.block);
 		i++;
-		if(i == level*10){
+		if(i == levels.blockLevel*10){
 			gameObject.GetComponent<ThirdPersonController>().hits = 0;
 			i = 0;
 			CrossoverMutation();
@@ -23,9 +27,7 @@ public class PlayerBlockGA : MonoBehaviour {
 	void CrossoverMutation() {
 		int min = 0;
 		int max = 0;
-
-		
-		for(int j = 0; j < 10*level; j ++) {
+		for(int j = 0; j < levels.blockLevel*10; j ++) {
 			blockEffectOUT.Add (blockEffectIN[j]);
 			if(blockEffectIN[j] < blockEffectIN[min] ) {
 				min  = j;
@@ -35,11 +37,9 @@ public class PlayerBlockGA : MonoBehaviour {
 			}
 		}
 		blockEffectOUT = blockEffectOUT.Distinct().ToList();
-		Debug.Log (max+" "+min);
-		blockEffectOUT[min] = blockEffectIN[max];
-		int rnd = Random.Range(0,50*level);
-		if (rnd < 10*level) {blockEffectOUT[rnd] = Random.Range (1,11)*10;}
-		level++;
+		blockEffectOUT [min] = blockEffectIN [max];
+		int rnd = Random.Range(0,50*levels.blockLevel);
+		if (rnd < levels.blockLevel*10) blockEffectOUT[rnd] = Random.Range (1,11)*10;
 		SendMessage ("NextLevel", "Block", SendMessageOptions.DontRequireReceiver);
 		average = (float)blockEffectOUT.Average ();
 

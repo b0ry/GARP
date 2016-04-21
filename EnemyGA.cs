@@ -1,4 +1,9 @@
-﻿using UnityEngine;
+﻿/// <summary>
+/// 
+/// NOT CURRENTLY USED
+/// 
+/// </summary>
+using UnityEngine;
 using System.Collections;
 
 public class EnemyGA: MonoBehaviour {

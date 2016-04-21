@@ -1,14 +1,19 @@
 using UnityEngine;
 using System.Collections;
+using GARP.GA;
+using GARP.Useful;
 [System.Serializable]
 
 public class PlayerAttack : MonoBehaviour {
 	private static int maxDepth = 2;
 	public string outputX = "";
 	public string outputZ = "";
+	private GameObject player;
 	
 	void Awake(){
-		int level = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().level;
+		player = GameObject.Find ("MyPlayer");
+		Levels levels = Singleton<Levels>.Unique;
+		int level = levels.attackLevel;
 		if (level == 1){
 			NodeTree firstTreeX = new NodeTree();
 			NodeTree firstTreeZ = new NodeTree();
@@ -18,24 +23,24 @@ public class PlayerAttack : MonoBehaviour {
 			outputZ = firstTreeZ.str;
 		}
 		else{
-			int jX = Random.Range (0,GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().xDirOUT_A.Count);
-			int kX = Random.Range (0,GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().xDirOUT_B.Count);
-			string str_AX = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().xDirOUT_A[jX];
-			string str_BX = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().xDirOUT_B[kX];
+			int jX = Random.Range (0,player.GetComponent<PlayerAttackGA>().xDirOUT_A.Count);
+			int kX = Random.Range (0,player.GetComponent<PlayerAttackGA>().xDirOUT_B.Count);
+			string str_AX = player.GetComponent<PlayerAttackGA>().xDirOUT_A[jX];
+			string str_BX = player.GetComponent<PlayerAttackGA>().xDirOUT_B[kX];
 			outputX = str_AX + str_BX;
 
-			int jZ = Random.Range (0,GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().zDirOUT_A.Count);
-			int kZ = Random.Range (0,GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().zDirOUT_B.Count);
-			string str_AZ = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().zDirOUT_A[jZ];
-			string str_BZ = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().zDirOUT_B[kZ];
+			int jZ = Random.Range (0,player.GetComponent<PlayerAttackGA>().zDirOUT_A.Count);
+			int kZ = Random.Range (0,player.GetComponent<PlayerAttackGA>().zDirOUT_B.Count);
+			string str_AZ = player.GetComponent<PlayerAttackGA>().zDirOUT_A[jZ];
+			string str_BZ = player.GetComponent<PlayerAttackGA>().zDirOUT_B[kZ];
 			outputZ = str_AZ + str_BZ;
 
-			int idx = GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().i;
+			int idx = player.GetComponent<PlayerAttackGA>().i;
 			if (idx == 0) {
-				GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().xDirIN.Clear();
-				GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().zDirIN.Clear();
-				GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().damageIN.Clear();
-				GameObject.Find("MyPlayer").GetComponent<PlayerAttackGA>().rangeIN.Clear();
+				player.GetComponent<PlayerAttackGA>().xDirIN.Clear();
+				player.GetComponent<PlayerAttackGA>().zDirIN.Clear();
+				player.GetComponent<PlayerAttackGA>().damageIN.Clear();
+				player.GetComponent<PlayerAttackGA>().rangeIN.Clear();
 			}
 
 		}

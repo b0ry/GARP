@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ShowText : MonoBehaviour {
+public class TextController : MonoBehaviour {
 	private TextMesh showText;
 	public int counter = 0;
 
@@ -19,9 +19,5 @@ public class ShowText : MonoBehaviour {
 		
 		if (counter == 0) 
 			showText.text = "";
-	}
-
-	public void DisplayText (string str) {
-		showText.text = str;
 	}
 }

@@ -4,21 +4,18 @@ using System.Collections.Generic;
 using GARP.GA;
 
 public class TreeChromosones : MonoBehaviour {
+	public Chromosones tree = new Chromosones();
 	public int triangles;
 	public int squares;
 	public int circles;
 	public int nice;
 	public int nasty;
-	public Vector3 size;
+	/*public Vector3 size;
 	public Color shade;
 	public List<string> types;
-	private Bush tree = new Bush();
+	private Bush tree = new Bush();*/
 
-	void Start() {
-
-	}
-
-	void TreeHit(){
+	public void TreeHit(){
 		tree.size = gameObject.GetComponentInChildren<TreeSpawn>().size;
 		tree.shade = gameObject.GetComponentInChildren<TreeSpawn>().shade;
 		tree.types = gameObject.GetComponentInChildren<TreeSpawn>().types;
@@ -33,8 +30,7 @@ public class TreeChromosones : MonoBehaviour {
 
 	IEnumerator countdownTree() {
 		yield return new WaitForSeconds(10.0f);
-		Debug.Log ( this.gameObject.transform.root.name );
 		//gameObject.GetComponentInParent<TreeGetGA>().MidTree(triangles,squares,circles,nice,nasty,size,shade,types);
-		SendMessageUpwards("RankTree", tree,  SendMessageOptions.DontRequireReceiver);
+		SendMessageUpwards("AddTree", tree,  SendMessageOptions.DontRequireReceiver);
 	}
 }

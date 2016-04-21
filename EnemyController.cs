@@ -1,12 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using GARP.GA;
 
-public class EnemyAttack : MonoBehaviour {
+public class EnemyController : MonoBehaviour {
 	private Transform myPlayer; 
 	public GameObject slash;
-	//public bool flag = false;
 	private float timer = 1f;
-	// Use this for initialization
 	void Start () {
 		myPlayer = GameObject.FindGameObjectWithTag ("Player").transform;
 	}
@@ -14,17 +13,14 @@ public class EnemyAttack : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		timer += Time.deltaTime;
-		float mag;
 		float x = myPlayer.position.x - this.transform.position.x;
 		float z = myPlayer.position.z - this.transform.position.z;
-		mag = new Vector2(x,z).magnitude; 
-
+		float mag = new Vector2(x,z).magnitude; 
 		if (mag < 5 && timer >= 1f) {
 			EnemyAttacksPlayer ();
 			StartCoroutine(EnemyAttacksPlayer ());
 			timer = 0f;
 		}
-
 	}
 	IEnumerator EnemyAttacksPlayer () {
 		yield return new WaitForSeconds(0.5f);
@@ -32,5 +28,21 @@ public class EnemyAttack : MonoBehaviour {
 		h.transform.parent = this.transform;
 		Destroy (h, 0.7f);
 		//flag = true;
+	}
+
+	void OnCollisionEnter (Collision projectile) {
+		if(projectile.gameObject.tag=="bullet"){
+			float weight = projectile.transform.GetComponent<Throw>().weight * 10f;
+			Attack attack = new Attack();
+			attack.damage = myPlayer.GetComponent<PlayerAttackGA>().damageOUT + (int)weight;
+			attack.range = projectile.transform.GetComponent<Throw>().range;
+			attack.x = projectile.transform.GetComponent<PlayerAttack>().outputX;
+			attack.z = projectile.transform.GetComponent<PlayerAttack>().outputZ;
+			myPlayer.GetComponent<PlayerAttackGA>().AddToAttackList(attack);
+
+			GetComponentInChildren<ShowText>().counter = 50;
+			GetComponentInChildren<ShowText>().DisplayText(attack.damage.ToString ());	
+			
+		}
 	}
 }
