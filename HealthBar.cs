@@ -72,9 +72,10 @@ public class HealthBar : MonoBehaviour {
 			}
 			else {
 				weight[i] = 0;
-				recharge = i;
+				recharge = i-1;
 				heal = i;
 			}
+
 		}
 	}
 
