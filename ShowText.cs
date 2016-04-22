@@ -11,7 +11,7 @@ public class ShowText : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void FixedUpdate () {
+	void Update () {
 		transform.LookAt (Camera.main.transform);
 		showText.transform.rotation = Quaternion.LookRotation(showText.transform.position - Camera.main.transform.position);
 		if (counter > 0) 

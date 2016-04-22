@@ -6,7 +6,7 @@ public class ThirdPersonController : MonoBehaviour {
 	public int hits;
 	public GameObject hit;
 	public float blockEffect ;
-	private bool blockFlag;
+	private bool blockFlag = false;
 	private int damage;
 
 	public GameObject projectile;
@@ -99,7 +99,7 @@ void Block() {
 	
 	if (Input.GetKey(KeyCode.S)){
 		for (int i = 0; i < 3; i++){
-			damage= Random.Range (1,11);
+			//damage= Random.Range (1,11);
 			float rnd = ((float)damage/40f)+0.25f;
 			gameObject.transform.GetChild (i).GetComponent<Renderer>().material.color = new Color (rnd,rnd,1f,1f);
 		}
@@ -316,6 +316,7 @@ void DidJump ()
 }
 
 void Update() {
+	damage= Random.Range (1,11);
 	if( Input.GetMouseButtonDown(0)) {InvokeRepeating("PlayerFire",0f,0.5f);}
 	if( Input.GetMouseButtonUp(0)) {CancelInvoke("PlayerFire");}
 	
@@ -399,12 +400,10 @@ void Update() {
 				blockEffect = Random.value;
 				float newDam = (1-blockEffect) * (float)damage;
 				healthBar.GetComponent<HealthBar>().currentDamage = (int)newDam;
-				TextMesh damCount = GetComponentInChildren<TextMesh>();
 				blockEffect *= 100;
 				int block4text = (int)blockEffect;
-				damCount.text = block4text.ToString () + "%";
-				int counter = GetComponentInChildren<ShowText>().counter;
-				counter = 50;
+				GetComponentInChildren<ShowText>().counter = 50;
+				GetComponentInChildren<ShowText>().DisplayText(block4text.ToString () + "%");	
 				Block block = new Block();
 				block.block = block4text;
 				SendMessage("AddToBlockList", block, SendMessageOptions.DontRequireReceiver);
